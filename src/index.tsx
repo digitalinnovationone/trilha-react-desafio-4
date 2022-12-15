@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./pages/Login";
+import App from "./pages/Login/login";
 
 import GlobalStyles from "./global";
 
