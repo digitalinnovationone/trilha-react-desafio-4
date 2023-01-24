@@ -5,4 +5,6 @@ export interface IInputProps extends React.InputHTMLAttributes<HTMLInputElement>
     control: Control<IFormLogin, any>   
     name: "email" | "password";
     errorMessage?: string;
+    placeholder?: string; 
+    type?: string;
 }
