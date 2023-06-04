@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import Button from "../../components/Button";
-import Input from "../../components/Input";
+import { Button } from "../../components/Button";
+import { Input } from "../../components/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
@@ -17,7 +17,7 @@ const schema = yup
   })
   .required();
 
-const Login = () => {
+export const Login = () => {
   const {
     control,
     formState: { errors, isValid },
@@ -27,6 +27,10 @@ const Login = () => {
     defaultValues,
     reValidateMode: "onChange",
   });
+
+  const handleClickSignIn = () => {
+    alert("Bem vindo!");
+  };
 
   return (
     <Container>
@@ -49,11 +53,9 @@ const Login = () => {
             errorMessage={errors?.password?.message}
           />
           <Spacing />
-          <Button title="Entrar" />
+          <Button title="Entrar" disabled={!isValid} onClick={handleClickSignIn} />
         </Column>
       </LoginContainer>
     </Container>
   );
 };
-
-export default Login;
