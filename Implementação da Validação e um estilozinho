@@ -1,0 +1,7 @@
+O que foi utilizado?
+React (com TypeScript)
+React Hook Form (validação do formulário)
+styled-components (estilização modular e reutilizável)
+TypeScript para tipagem estática e maior segurança no desenvolvimento
+
+Foi criada a validação do botão conforme os requisitos do formulário de login.
