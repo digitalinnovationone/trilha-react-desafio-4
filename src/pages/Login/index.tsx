@@ -1,59 +1,114 @@
-import { useForm } from "react-hook-form";
-import Button from "../../components/Button";
-import Input from "../../components/Input";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+// src/pages/Login/index.tsx
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Input } from '../../components/Input';
+import { Button } from '../../components/Button';
+import api from '../../services/api';
+import {
+  Container,
+  ContentWrapper,
+  ImageSection,
+  Image,
+  FormSection,
+  Title,
+  Subtitle,
+  Form,
+  RegisterLink,
+  Message,
+} from './styles';
 
-import { Container, LoginContainer, Column, Spacing, Title } from "./styles";
-import { defaultValues, IFormLogin } from "./types";
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
-const schema = yup
-  .object({
-    email: yup.string().email("E-mail inválido").required("Campo obrigatório"),
-    password: yup
-      .string()
-      .min(6, "No minimo 6 caracteres")
-      .required("Campo obrigatório"),
-  })
-  .required();
-
-const Login = () => {
+export const Login: React.FC = () => {
   const {
-    control,
-    formState: { errors, isValid },
-  } = useForm<IFormLogin>({
-    resolver: yupResolver(schema),
-    mode: "onBlur",
-    defaultValues,
-    reValidateMode: "onChange",
-  });
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<LoginFormData>();
+  const [submissionMessage, setSubmissionMessage] = useState<{
+    text: string;
+    type: 'success' | 'error';
+  } | null>(null);
+
+  const onSubmit = async (data: LoginFormData) => {
+    setSubmissionMessage(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      if (data.email === 'teste@dio.me' && data.password === '123456') {
+        setSubmissionMessage({
+          text: 'Login realizado com sucesso!',
+          type: 'success',
+        });
+        reset();
+      } else {
+        setSubmissionMessage({
+          text: 'Email ou senha inválidos.',
+          type: 'error',
+        });
+      }
+    } catch (error) {
+      setSubmissionMessage({
+        text: 'Erro de conexão ou servidor. Tente mais tarde.',
+        type: 'error',
+      });
+    }
+  };
 
   return (
     <Container>
-      <LoginContainer>
-        <Column>
-          <Title>Login</Title>
-          <Spacing />
-          <Input
-            name="email"
-            placeholder="Email"
-            control={control}
-            errorMessage={errors?.email?.message}
-          />
-          <Spacing />
-          <Input
-            name="password"
-            type="password"
-            placeholder="Senha"
-            control={control}
-            errorMessage={errors?.password?.message}
-          />
-          <Spacing />
-          <Button title="Entrar" />
-        </Column>
-      </LoginContainer>
+      <ContentWrapper>
+        <ImageSection>
+          <Image src="https://via.placeholder.com/500" alt="DIO Login" />
+        </ImageSection>
+        <FormSection>
+          <Title>Faça seu Login na DIO</Title>
+          <Subtitle>
+            Acesse a plataforma e continue sua jornada de aprendizado.
+          </Subtitle>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              type="email"
+              placeholder="Email"
+              {...register('email', {
+                required: 'Email é obrigatório',
+                pattern: {
+                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                  message: 'Email inválido',
+                },
+              })}
+              error={errors.email?.message}
+            />
+            <Input
+              type="password"
+              placeholder="Senha"
+              {...register('password', {
+                required: 'Senha é obrigatória',
+                minLength: {
+                  value: 6,
+                  message: 'Senha deve ter no mínimo 6 caracteres',
+                },
+              })}
+              error={errors.password?.message}
+            />
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Entrando...' : 'Entrar'}
+            </Button>
+          </Form>
+          {submissionMessage && (
+            <Message color={submissionMessage.type}>
+              {submissionMessage.text}
+            </Message>
+          )}
+          <RegisterLink>
+            Não tem uma conta? <a href="#">Cadastre-se</a>
+          </RegisterLink>
+        </FormSection>
+      </ContentWrapper>
     </Container>
   );
 };
-
-export default Login;
