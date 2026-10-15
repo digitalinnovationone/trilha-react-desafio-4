@@ -18,6 +18,7 @@ export const InputContainer = styled.div`
         background-color: transparent;
         border: 0;
         outline: none;
+        color: #29232d;
     }
 
 `
